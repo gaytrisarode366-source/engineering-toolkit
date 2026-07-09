@@ -114,8 +114,6 @@ MIT License — free to use and modify.
 
 **Gaytri Sarode**  
 Engineering Student, SPPU Pune  
-[GitHub](https://github.com/YOUR_USERNAME)
-
 ---
 
-⭐ If this helped you, please give it a star!
+
