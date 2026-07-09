@@ -1,17 +1,8 @@
 """
 Engineering Student Toolkit
-============================
-A collection of useful calculators and utilities for engineering students.
-Author: Gaytri Sarode
-University: Savitribai Phule Pune University
+===========================
 """
-
 import math
-
-
-# ─────────────────────────────────────────
-# 1. UNIT CONVERTER
-# ─────────────────────────────────────────
 
 def convert_length(value, from_unit, to_unit):
     """Convert between length units."""
@@ -44,12 +35,7 @@ def convert_temperature(value, from_unit, to_unit):
         return round(celsius + 273.15, 2)
     else:
         return "Invalid unit"
-
-
-# ─────────────────────────────────────────
-# 2. PHYSICS CALCULATORS
-# ─────────────────────────────────────────
-
+#physics
 def ohms_law(V=None, I=None, R=None):
     """Calculate V, I, or R using Ohm's Law: V = I * R"""
     if V is None and I is not None and R is not None:
@@ -75,12 +61,7 @@ def potential_energy(mass_kg, height_m, g=9.81):
 def force(mass_kg, acceleration_ms2):
     """F = m * a (Newton's Second Law)"""
     return round(mass_kg * acceleration_ms2, 4)
-
-
-# ─────────────────────────────────────────
-# 3. MATHS UTILITIES
-# ─────────────────────────────────────────
-
+#math
 def quadratic_roots(a, b, c):
     """Find roots of ax^2 + bx + c = 0"""
     discriminant = b ** 2 - 4 * a * c
@@ -121,11 +102,7 @@ def lcm(a, b):
     """Return LCM of two numbers."""
     return abs(a * b) // math.gcd(a, b)
 
-
-# ─────────────────────────────────────────
-# 4. CGPA CALCULATOR
-# ─────────────────────────────────────────
-
+#cgpa
 def calculate_cgpa(grades: list):
     """
     Calculate CGPA from a list of (grade_points, credits) tuples.
@@ -155,11 +132,6 @@ def percentage_to_grade(percentage):
     else:
         return "F (Fail)"
 
-
-# ─────────────────────────────────────────
-# 5. DEMO / MAIN
-# ─────────────────────────────────────────
-
 if __name__ == "__main__":
     print("=" * 50)
     print("  🔧 Engineering Student Toolkit")
@@ -170,19 +142,19 @@ if __name__ == "__main__":
     print(f"  100 cm = {convert_length(100, 'cm', 'm')} m")
     print(f"  37°C = {convert_temperature(37, 'C', 'F')}°F")
 
-    print("\n⚡ Ohm's Law (V=?, I=2A, R=5Ω):")
+    print("\n Ohm's Law (V=?, I=2A, R=5Ω):")
     print(f"  Voltage = {ohms_law(I=2, R=5)} V")
 
-    print("\n🔢 Quadratic Roots (x² - 5x + 6 = 0):")
+    print("\n Quadratic Roots (x² - 5x + 6 = 0):")
     print(f"  Roots = {quadratic_roots(1, -5, 6)}")
 
-    print("\n🎓 CGPA Calculator:")
+    print("\n CGPA Calculator:")
     grades = [(8, 4), (9, 3), (7, 4), (8, 3)]
     print(f"  Grades: {grades}")
     print(f"  CGPA = {calculate_cgpa(grades)}")
 
-    print("\n📊 Grade Check:")
+    print("\nGrade Check:")
     print(f"  72% = {percentage_to_grade(72)}")
     print(f"  85% = {percentage_to_grade(85)}")
 
-    print("\n✅ All functions working!")
+    print("\nAll functions working!")
