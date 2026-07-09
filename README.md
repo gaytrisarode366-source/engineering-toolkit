@@ -113,7 +113,6 @@ MIT License — free to use and modify.
 ## 👩‍💻 Author
 
 **Gaytri Sarode**  
-Engineering Student, SPPU Pune  
 ---
 
 
