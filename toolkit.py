@@ -1,160 +1,288 @@
-"""
-Engineering Student Toolkit
-===========================
-"""
 import math
 
+# ==========================
+# UNIT CONVERTER
+# ==========================
+
+length_units = {
+    "mm": 0.001,
+    "cm": 0.01,
+    "m": 1,
+    "km": 1000,
+    "inch": 0.0254,
+    "ft": 0.3048
+}
+
+
 def convert_length(value, from_unit, to_unit):
-    """Convert between length units."""
-    to_meters = {
-        "mm": 0.001, "cm": 0.01, "m": 1,
-        "km": 1000, "inch": 0.0254, "ft": 0.3048
-    }
-    if from_unit not in to_meters or to_unit not in to_meters:
-        return "Invalid unit"
-    meters = value * to_meters[from_unit]
-    return meters / to_meters[to_unit]
+    from_unit = from_unit.lower()
+    to_unit = to_unit.lower()
+
+    if from_unit not in length_units or to_unit not in length_units:
+        raise ValueError("Invalid unit.")
+
+    meters = value * length_units[from_unit]
+    return meters / length_units[to_unit]
 
 
 def convert_temperature(value, from_unit, to_unit):
-    """Convert between Celsius, Fahrenheit, and Kelvin."""
-    if from_unit == "C":
-        celsius = value
-    elif from_unit == "F":
-        celsius = (value - 32) * 5 / 9
+    from_unit = from_unit.upper()
+    to_unit = to_unit.upper()
+
+    if from_unit == to_unit:
+        return value
+
+    # Convert to Celsius
+    if from_unit == "F":
+        c = (value - 32) * 5 / 9
     elif from_unit == "K":
-        celsius = value - 273.15
+        c = value - 273.15
     else:
-        return "Invalid unit"
+        c = value
 
-    if to_unit == "C":
-        return round(celsius, 2)
-    elif to_unit == "F":
-        return round((celsius * 9 / 5) + 32, 2)
+    # Convert Celsius to target
+    if to_unit == "F":
+        return c * 9 / 5 + 32
     elif to_unit == "K":
-        return round(celsius + 273.15, 2)
+        return c + 273.15
     else:
-        return "Invalid unit"
-#physics
+        return c
+
+
+# ==========================
+# PHYSICS
+# ==========================
+
 def ohms_law(V=None, I=None, R=None):
-    """Calculate V, I, or R using Ohm's Law: V = I * R"""
-    if V is None and I is not None and R is not None:
-        return round(I * R, 4)
-    elif I is None and V is not None and R is not None:
-        return round(V / R, 4)
-    elif R is None and V is not None and I is not None:
-        return round(V / I, 4)
-    else:
-        return "Provide exactly two values"
+
+    if V is None:
+        return I * R
+
+    if I is None:
+        return V / R
+
+    if R is None:
+        return V / I
+
+    return "Provide only two values."
 
 
-def kinetic_energy(mass_kg, velocity_ms):
-    """KE = 0.5 * m * v^2"""
-    return round(0.5 * mass_kg * velocity_ms ** 2, 4)
+def force(mass, acceleration):
+    return mass * acceleration
 
 
-def potential_energy(mass_kg, height_m, g=9.81):
-    """PE = m * g * h"""
-    return round(mass_kg * g * height_m, 4)
+def kinetic_energy(mass, velocity):
+    return 0.5 * mass * velocity ** 2
 
 
-def force(mass_kg, acceleration_ms2):
-    """F = m * a (Newton's Second Law)"""
-    return round(mass_kg * acceleration_ms2, 4)
-#math
+def potential_energy(mass, gravity, height):
+    return mass * gravity * height
+
+
+# ==========================
+# MATH UTILITIES
+# ==========================
+
 def quadratic_roots(a, b, c):
-    """Find roots of ax^2 + bx + c = 0"""
-    discriminant = b ** 2 - 4 * a * c
-    if discriminant > 0:
-        r1 = (-b + math.sqrt(discriminant)) / (2 * a)
-        r2 = (-b - math.sqrt(discriminant)) / (2 * a)
-        return round(r1, 4), round(r2, 4)
-    elif discriminant == 0:
+
+    d = b ** 2 - 4 * a * c
+
+    if d > 0:
+        r1 = (-b + math.sqrt(d)) / (2 * a)
+        r2 = (-b - math.sqrt(d)) / (2 * a)
+        return (r1, r2)
+
+    elif d == 0:
         r = -b / (2 * a)
-        return round(r, 4), round(r, 4)
+        return (r,)
+
     else:
         real = -b / (2 * a)
-        imag = math.sqrt(-discriminant) / (2 * a)
-        return f"{round(real,4)}+{round(imag,4)}i", f"{round(real,4)}-{round(imag,4)}i"
+        imag = math.sqrt(-d) / (2 * a)
+        return (complex(real, imag), complex(real, -imag))
 
 
-def is_prime(n):
-    """Check if a number is prime."""
+def prime_check(n):
+
     if n < 2:
         return False
+
     for i in range(2, int(math.sqrt(n)) + 1):
         if n % i == 0:
             return False
+
     return True
 
 
-def factorial(n):
-    """Return factorial of n."""
-    return math.factorial(n)
-
-
 def gcd(a, b):
-    """Return GCD of two numbers."""
     return math.gcd(a, b)
 
 
 def lcm(a, b):
-    """Return LCM of two numbers."""
     return abs(a * b) // math.gcd(a, b)
 
-#cgpa
-def calculate_cgpa(grades: list):
-    """
-    Calculate CGPA from a list of (grade_points, credits) tuples.
-    Example: [(8, 4), (9, 3), (7, 4)]
-    """
-    total_points = sum(g * c for g, c in grades)
-    total_credits = sum(c for _, c in grades)
+
+# ==========================
+# CGPA
+# ==========================
+
+def calculate_cgpa(subjects):
+
+    total_points = 0
+    total_credits = 0
+
+    for grade, credit in subjects:
+        total_points += grade * credit
+        total_credits += credit
+
     if total_credits == 0:
         return 0
+
     return round(total_points / total_credits, 2)
 
 
-def percentage_to_grade(percentage):
-    """Convert percentage to grade (SPPU style)."""
-    if percentage >= 75:
-        return "O (Outstanding)"
-    elif percentage >= 65:
-        return "A+ (Excellent)"
-    elif percentage >= 55:
-        return "A (Very Good)"
-    elif percentage >= 50:
-        return "B+ (Good)"
-    elif percentage >= 45:
-        return "B (Above Average)"
-    elif percentage >= 40:
-        return "C (Average / Pass)"
+# ==========================
+# PERCENTAGE TO GRADE
+# (SPPU Style Example)
+# ==========================
+
+def percentage_to_grade(percent):
+
+    if percent >= 90:
+        return "O"
+
+    elif percent >= 80:
+        return "A+"
+
+    elif percent >= 70:
+        return "A"
+
+    elif percent >= 60:
+        return "B+"
+
+    elif percent >= 55:
+        return "B"
+
+    elif percent >= 50:
+        return "C"
+
+    elif percent >= 45:
+        return "P"
+
     else:
-        return "F (Fail)"
+        return "F"
+
+
+# ==========================
+# MENU
+# ==========================
+
+def menu():
+
+    while True:
+
+        print("\n====== ENGINEERING TOOLKIT ======")
+        print("1. Length Converter")
+        print("2. Temperature Converter")
+        print("3. Ohm's Law")
+        print("4. Force")
+        print("5. Kinetic Energy")
+        print("6. Potential Energy")
+        print("7. Quadratic Roots")
+        print("8. Prime Check")
+        print("9. GCD")
+        print("10. LCM")
+        print("11. CGPA Calculator")
+        print("12. Percentage to Grade")
+        print("0. Exit")
+
+        choice = input("\nEnter choice: ")
+
+        if choice == "1":
+            v = float(input("Value: "))
+            f = input("From Unit: ")
+            t = input("To Unit: ")
+            print("Answer:", convert_length(v, f, t))
+
+        elif choice == "2":
+            v = float(input("Temperature: "))
+            f = input("From (C/F/K): ")
+            t = input("To (C/F/K): ")
+            print("Answer:", round(convert_temperature(v, f, t), 2))
+
+        elif choice == "3":
+            print("Leave unknown blank")
+
+            V = input("Voltage: ")
+            I = input("Current: ")
+            R = input("Resistance: ")
+
+            V = float(V) if V else None
+            I = float(I) if I else None
+            R = float(R) if R else None
+
+            print("Answer:", ohms_law(V, I, R))
+
+        elif choice == "4":
+            m = float(input("Mass: "))
+            a = float(input("Acceleration: "))
+            print("Force =", force(m, a))
+
+        elif choice == "5":
+            m = float(input("Mass: "))
+            v = float(input("Velocity: "))
+            print("KE =", kinetic_energy(m, v))
+
+        elif choice == "6":
+            m = float(input("Mass: "))
+            g = float(input("Gravity: "))
+            h = float(input("Height: "))
+            print("PE =", potential_energy(m, g, h))
+
+        elif choice == "7":
+            a = float(input("a: "))
+            b = float(input("b: "))
+            c = float(input("c: "))
+            print(quadratic_roots(a, b, c))
+
+        elif choice == "8":
+            n = int(input("Number: "))
+            print(prime_check(n))
+
+        elif choice == "9":
+            a = int(input("First Number: "))
+            b = int(input("Second Number: "))
+            print(gcd(a, b))
+
+        elif choice == "10":
+            a = int(input("First Number: "))
+            b = int(input("Second Number: "))
+            print(lcm(a, b))
+
+        elif choice == "11":
+
+            n = int(input("Number of subjects: "))
+
+            subjects = []
+
+            for i in range(n):
+                gp = float(input(f"Subject {i+1} Grade Point: "))
+                cr = float(input(f"Subject {i+1} Credits: "))
+                subjects.append((gp, cr))
+
+            print("CGPA =", calculate_cgpa(subjects))
+
+        elif choice == "12":
+            p = float(input("Percentage: "))
+            print("Grade:", percentage_to_grade(p))
+
+        elif choice == "0":
+            print("Goodbye!")
+            break
+
+        else:
+            print("Invalid Choice")
+
 
 if __name__ == "__main__":
-    print("=" * 50)
-    print("  🔧 Engineering Student Toolkit")
-    print("  Savitribai Phule Pune University")
-    print("=" * 50)
-
-    print("\n📐 Unit Conversion:")
-    print(f"  100 cm = {convert_length(100, 'cm', 'm')} m")
-    print(f"  37°C = {convert_temperature(37, 'C', 'F')}°F")
-
-    print("\n Ohm's Law (V=?, I=2A, R=5Ω):")
-    print(f"  Voltage = {ohms_law(I=2, R=5)} V")
-
-    print("\n Quadratic Roots (x² - 5x + 6 = 0):")
-    print(f"  Roots = {quadratic_roots(1, -5, 6)}")
-
-    print("\n CGPA Calculator:")
-    grades = [(8, 4), (9, 3), (7, 4), (8, 3)]
-    print(f"  Grades: {grades}")
-    print(f"  CGPA = {calculate_cgpa(grades)}")
-
-    print("\nGrade Check:")
-    print(f"  72% = {percentage_to_grade(72)}")
-    print(f"  85% = {percentage_to_grade(85)}")
-
-    print("\nAll functions working!")
+    menu()
